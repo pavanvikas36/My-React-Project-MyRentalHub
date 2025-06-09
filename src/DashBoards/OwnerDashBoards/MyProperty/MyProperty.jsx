@@ -172,7 +172,7 @@
 
 // export default MyProperty;
 
-
+//Main Component
 import React, { useEffect, useState } from 'react';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../../FirebaseConfig/config';
