@@ -1,17 +1,46 @@
 import React from "react";
-import logo from "../../assets/MyRentalHub.png";
-import { Link, NavLink } from "react-router-dom";
+import logo from "../../assets/MyRentalHubLogoDesign3.png";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import { signOut, getAuth } from "firebase/auth";
+import Swal from 'sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css';
 
 const Navbar = () => {
+  const navegate = useNavigate()
+  const loggedinOwner = JSON.parse(localStorage.getItem("loggedinOwner"))
+
+  const handleLogout = async()=>{
+    const auth = getAuth()
+    try{
+      await signOut(auth)
+      localStorage.removeItem("loggedinOwner")
+      Swal.fire({
+        title: 'Logout Successful!',
+        text: 'You have been securely logged out.',
+        icon: 'info',
+        iconColor: '#7c3aed',   // Tailwind Violet-600
+        background: '#f5f3ff',  // Tailwind Violet-50
+        color: '#4c1d95',       // Tailwind Violet-900
+        timer: 2000,
+        timerProgressBar: true,
+        showConfirmButton: false,
+      });
+      navegate("/login")
+    }
+    catch(error){
+      console.log(error)
+    }
+  }
+
   return (
-    <div className="navbar px-4 md:px-8 shadow-md flex justify-between items-center" style={{ backgroundColor: "#8B008B" }}>
+    <div className="navbar px-4 md:px-8 shadow-md flex justify-between items-center bg-violet-800">
       {/* Navbar Start */}
       <div className="navbar-start">
         <NavLink
           to="/home"
-          className="btn btn-ghost normal-case text-xl flex items-center gap-2 text-white hover:text-pink-300 transition"
+          className="btn btn-ghost normal-case text-xl flex items-center gap-2 text-white hover:text-violet-300 transition"
         >
-          <img src={logo} alt="MyRentalHub Logo" className="h-10 w-auto" />
+          <img src={logo} alt="MyRentalHub Logo" className="h-12 w-auto" />
           <span className="hidden sm:inline-block font-semibold">MyRentalHub</span>
         </NavLink>
       </div>
@@ -19,10 +48,15 @@ const Navbar = () => {
       {/* Navbar Center (Desktop Only) */}
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1 text-white gap-4">
-          <li><Link to="/home" className="hover:text-pink-300">Home</Link></li>
-          <li><Link to="/about" className="hover:text-pink-300">About</Link></li>
-          <li><Link to="/properties" className="hover:text-pink-300">Properties</Link></li>
-          <li><Link to="/contact" className="hover:text-pink-300">Contact</Link></li>
+          {loggedinOwner ? <>
+            <li><Link className="hover:text-violet-300">Add Property</Link></li>
+            <li><Link to="/about" className="hover:text-violet-300">My Properties</Link></li>
+          </> : <>
+            <li><Link to="/home" className="hover:text-violet-300">Home</Link></li>
+            <li><Link to="/about" className="hover:text-violet-300">About</Link></li>
+            <li><Link to="/properties" className="hover:text-violet-300">Properties</Link></li>
+            <li><Link to="/contact" className="hover:text-violet-300">Contact</Link></li>
+          </>}
         </ul>
       </div>
 
@@ -37,8 +71,12 @@ const Navbar = () => {
 
         {/* Desktop Login/Signup */}
         <div className="hidden md:flex gap-3 items-center">
-          <NavLink to="/login" className="text-white hover:text-pink-300 font-medium transition">Login</NavLink>
-          <NavLink to="/signup" className="text-white bg-pink-600 px-4 py-2 rounded-md hover:bg-pink-500 transition font-medium">Signup</NavLink>
+          {loggedinOwner ? <>
+            <button onClick={handleLogout}><NavLink className="text-white bg-violet-600 px-4 py-2 rounded-md hover:bg-violet-500 transition font-medium">Logout</NavLink></button>
+          </> : <>
+            <NavLink to="/login" className="text-white hover:text-violet-300 font-medium transition">Login</NavLink>
+            <NavLink to="/signup" className="text-white bg-violet-600 px-4 py-2 rounded-md hover:bg-violet-500 transition font-medium">Signup</NavLink>
+          </>}
         </div>
 
         {/* Profile Avatar */}
@@ -48,10 +86,9 @@ const Navbar = () => {
               <img src="https://i.pravatar.cc/300?img=13" alt="User Avatar" />
             </div>
           </div>
-          <ul tabIndex={0} className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-white text-fuchsia-700 rounded-box w-52">
-            <li><a className="hover:bg-fuchsia-100 rounded">Profile</a></li>
-            <li><a className="hover:bg-fuchsia-100 rounded">Settings</a></li>
-            <li><a className="hover:bg-fuchsia-100 rounded">Logout</a></li>
+          <ul tabIndex={0} className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-white text-violet-700 rounded-box w-52">
+            <li><a className="hover:bg-violet-100 rounded">Profile</a></li>
+            <li><a className="hover:bg-violet-100 rounded">Settings</a></li>
           </ul>
         </div>
 
@@ -62,18 +99,34 @@ const Navbar = () => {
               <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
             </svg>
           </label>
-          <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-50 p-2 shadow bg-white text-[#8B008B] rounded-box w-52">
+          <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-50 p-2 shadow bg-white text-violet-800 rounded-box w-52">
             <li><Link to="/home">Home</Link></li>
             <li><Link to="/about">About</Link></li>
             <li><Link to="/properties">Properties</Link></li>
             <li><Link to="/contact">Contact</Link></li>
-            <li><Link to="/login">Login</Link></li>
-            <li><Link to="/signup">Signup</Link></li>
+            {/* <li className="divider"></li> */}
+            {loggedinOwner ? (
+              <li>
+                <button onClick={handleLogout}><NavLink className="text-white bg-violet-600 px-4 py-2 rounded-md hover:bg-violet-500 transition font-medium text-center">Logout</NavLink></button>
+              </li>
+            ) : (
+              <>
+                <li>
+                  <NavLink to="/login" className="text-violet-800 hover:bg-violet-100 px-4 py-2 m-1 rounded font-medium text-center">Login</NavLink>
+                </li>
+                <li>
+                  <NavLink to="/signup" className="text-white bg-violet-600 px-4 py-2 m-1 rounded-md hover:bg-violet-500 transition font-medium text-center">Signup</NavLink>
+                </li>
+              </>
+            )}
           </ul>
         </div>
+
       </div>
     </div>
   );
 };
 
 export default Navbar;
+
+
