@@ -26,6 +26,22 @@
 //   if(loading){
 //     return <p>Loading....</p>
 //   }
+//   const handleDelete = async(propertyIndex) => {
+  //   try{
+  //     const updateProperty = properties.filter((property, index) => index !== propertyIndex);//assuming propertyID is unique field
+  //     console.log(updateProperty)
+  //     const ownerRef = doc(db, "Owners", loggedinUser.user.displayName)
+  //     await updateDoc(ownerRef, {
+  //       properties: updateProperty,
+  //     })
+  //     setProperties(updateProperty);
+  //   }
+  //   catch(error){
+  //     console.log(error)
+  //   }
+  //   alert(`Delete functionality for property at index ${propertyIndex}`);
+  //   // You can confirm and remove the property from Firestore here
+  // };
 
 //   return (
 //     <div>
@@ -172,11 +188,15 @@
 
 // export default MyProperty;
 
-//Main Component
+
+
+
 import React, { useEffect, useState } from 'react';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../../../FirebaseConfig/config';
 import { ChevronLeft, ChevronRight, Pencil, Trash2 } from 'lucide-react';
+import Swal from 'sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css';
 
 const MyProperty = () => {
   const loggedinUser = JSON.parse(localStorage.getItem("loggedinOwner"));
@@ -235,12 +255,65 @@ const MyProperty = () => {
     // You can integrate modal/edit page navigation here
   };
 
-  const handleDelete = (propertyIndex) => {
-    alert(`Delete functionality for property at index ${propertyIndex}`);
-    // You can confirm and remove the property from Firestore here
+  const handleDelete = async (propertyIndex) => {
+    const confirm = await Swal.fire({
+      title: 'Are you sure?',
+      text: 'This property will be permanently removed!',
+      icon: 'warning',
+      iconColor: '#7c3aed', // Tailwind Violet-600
+      background: '#f5f3ff', // Tailwind Violet-50
+      color: '#4c1d95',      // Tailwind Violet-900
+      showCancelButton: true,
+      confirmButtonColor: '#ede9fe', // Tailwind Violet-100
+      cancelButtonColor: '#ddd6fe',  // Tailwind Violet-200
+      confirmButtonText: '<span style="color:#4c1d95;">Yes, delete it!</span>',
+      cancelButtonText: '<span style="color:#6b21a8;">Cancel</span>',
+    });
+
+
+    if (confirm.isConfirmed) {
+      try {
+        const updatedProperties = properties.filter((_, index) => index !== propertyIndex);
+
+        const ownerRef = doc(db, "Owners", loggedinUser.user.displayName);
+        await updateDoc(ownerRef, {
+          properties: updatedProperties,
+        });
+
+        setProperties(updatedProperties);
+
+        Swal.fire({
+          title: 'Deleted!',
+          text: `Property at index ${propertyIndex} has been deleted.`,
+          icon: 'success',
+          iconColor: '#7c3aed',
+          background: '#f5f3ff',
+          color: '#4c1d95',
+          timer: 1000,
+          showConfirmButton: false,
+          timerProgressBar: true,
+        });
+      } catch (error) {
+        console.error(error);
+        Swal.fire({
+          title: 'Error!',
+          text: 'Something went wrong while deleting.',
+          icon: 'error',
+          iconColor: '#dc2626',
+          background: '#fef2f2',
+          color: '#7f1d1d',
+        });
+      }
+    }
   };
 
-  if (loading) return <p className="text-center mt-10">Loading...</p>;
+  if (loading) {
+    return (
+      <div className="flex justify-center mt-12 h-screen">
+        <div className="w-12 h-12 border-4 border-violet-500 border-dashed rounded-full animate-spin"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-violet-50 min-h-screen p-6">
