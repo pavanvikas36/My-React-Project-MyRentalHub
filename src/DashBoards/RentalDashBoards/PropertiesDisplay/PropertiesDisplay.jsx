@@ -10,25 +10,209 @@
 //         try{
 //             const ownersPropertiesRef = collection(db, "Owners")
 //             const allOwnerProperties = await getDocs(ownersPropertiesRef)
+//             let propertiesFromDoc = []
 //             // console.log(allOwnerProperties.docs)
-//             allOwnerProperties.docs.map((singleProperty)=>{
-//                 console.log(singleProperty.data().properties)
+//             allOwnerProperties.docs.map((singleOwnerDoc)=>{
+//               const ownerData = singleOwnerDoc.data();
+//               const individualProperties = ownerData.properties || [];
+//               individualProperties.map((property) => {
+//                 propertiesFromDoc.push(property);
+//               })
+//               console.log(propertiesFromDoc)
+//               setAllProperties(allOwnerProperties)
 //             })
 //         }
 //         catch(error){
-//             console.error(error)
+//           console.error('Error fetching properties:', error);
 //         }
 //     }
 //     fetchingProperties()
 //   }, [])
 //   return (
 //     <div>
-//       PropertiesDisplay
+//       {allProperties.length > 0 ? <>
+        
+//       </> : <>
+//         <p>No Jobs Found</p>
+//       </>}
 //     </div>
 //   )
 // }
 
 // export default PropertiesDisplay
+
+
+
+// Importent
+import React, { useEffect, useState } from 'react';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../../../FirebaseConfig/config';
+
+const PropertiesDisplay = () => {
+  const [allProperties, setAllProperties] = useState([]);
+
+  useEffect(() => {
+    const fetchingProperties = async () => {
+      try {
+        const ownersPropertiesRef = collection(db, "Owners");
+        const allOwnerProperties = await getDocs(ownersPropertiesRef);
+        let propertiesFromDoc = [];
+
+        allOwnerProperties.docs.forEach((singleOwnerDoc) => {
+          const ownerData = singleOwnerDoc.data();
+          const individualProperties = ownerData.properties || [];
+          individualProperties.forEach((property) => {
+            propertiesFromDoc.push(property);
+          });
+        });
+
+        setAllProperties(propertiesFromDoc);
+      } catch (error) {
+        console.error('Error fetching properties:', error);
+      }
+    };
+    fetchingProperties();
+  }, []);
+
+  return (
+    <div className="p-6 bg-gray-100 rounded-2xl min-h-screen">
+      <h2 className="text-2xl font-bold mb-6 text-black text-center">Available Rental Properties</h2>
+      {allProperties.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {allProperties.map((property, index) => {
+            const images = property.images?.slice(0, 3) || [];
+            return (
+              <div key={index} className="bg-white rounded-2xl shadow-md overflow-hidden">
+                <div className="relative h-56 w-full">
+                  <div className="carousel w-full h-full">
+                    {images.map((image, imgIndex) => (
+                      <div
+                        key={imgIndex}
+                        className={`carousel-item w-full h-full ${imgIndex === 0 ? 'block' : 'hidden'}`}
+                        style={{
+                          backgroundImage: `url(${image})`,
+                          backgroundSize: 'cover',
+                          backgroundPosition: 'center'
+                        }}
+                      />
+                    ))}
+                  </div>
+                </div>
+                <div className="p-4 text-black cursor-pointer">
+                  <h3 className="text-lg font-semibold mb-2">{property.title}</h3>
+                  <p className="text-sm"><strong>Location:</strong> {property.location}</p>
+                  <p className="text-sm"><strong>Rent:</strong> ₹{property.rent}</p>
+                  <p className="text-sm"><strong>Available From:</strong> {property.availableFrom}</p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      ) : (
+        <p className="text-center text-black text-lg">No Properties Found</p>
+      )}
+    </div>
+  );
+};
+
+export default PropertiesDisplay;
+
+
+// Auto carousel Code
+// import React, { useEffect, useState } from 'react';
+// import { collection, getDocs } from 'firebase/firestore';
+// import { db } from '../../../FirebaseConfig/config';
+// import { useNavigate } from 'react-router-dom';
+
+// const PropertiesDisplay = () => {
+//   const [allProperties, setAllProperties] = useState([]);
+//   const [currentImageIndexes, setCurrentImageIndexes] = useState({});
+//   const navigate = useNavigate();
+
+//   // Fetch properties from Owners collection
+//   useEffect(() => {
+//     const fetchingProperties = async () => {
+//       try {
+//         const ownersPropertiesRef = collection(db, "Owners");
+//         const allOwnerProperties = await getDocs(ownersPropertiesRef);
+//         let propertiesFromDoc = [];
+
+//         allOwnerProperties.docs.forEach((singleOwnerDoc) => {
+//           const ownerData = singleOwnerDoc.data();
+//           const individualProperties = ownerData.properties || [];
+//           individualProperties.forEach((property) => {
+//             propertiesFromDoc.push(property);
+//           });
+//         });
+
+//         setAllProperties(propertiesFromDoc);
+//       } catch (error) {
+//         console.error('Error fetching properties:', error);
+//       }
+//     };
+//     fetchingProperties();
+//   }, []);
+
+//   // Auto slide carousel images
+//   useEffect(() => {
+//     const interval = setInterval(() => {
+//       setCurrentImageIndexes((prev) => {
+//         const updatedIndexes = {};
+//         allProperties.forEach((_, index) => {
+//           const images = allProperties[index]?.images || [];
+//           const currentIndex = prev[index] || 0;
+//           updatedIndexes[index] = (currentIndex + 1) % images.length;
+//         });
+//         return updatedIndexes;
+//       });
+//     }, 1000); // 3 seconds
+//     return () => clearInterval(interval);
+//   }, [allProperties]);
+
+//   return (
+//     <div className="p-6 bg-gray-100 rounded-2xl min-h-screen">
+//       <h2 className="text-2xl font-bold mb-6 text-black text-center">Available Rental Properties</h2>
+//       {allProperties.length > 0 ? (
+//         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+//           {allProperties.map((property, index) => {
+//             const images = property.images?.slice(0, 3) || [];
+//             const currentImageIndex = currentImageIndexes[index] || 0;
+
+//             return (
+//               <div key={index} className="bg-white rounded-2xl shadow-md overflow-hidden">
+//                 {/* Carousel Image */}
+//                 <div
+//                   className="relative h-56 w-full"
+//                   style={{
+//                     backgroundImage: `url(${images[currentImageIndex] || 'https://via.placeholder.com/400x300'})`,
+//                     backgroundSize: 'cover',
+//                     backgroundPosition: 'center',
+//                     transition: 'background-image 0.5s ease-in-out'
+//                   }}
+//                 ></div>
+
+//                 {/* Text Section - Clickable */}
+//                 <div
+//                   className="p-4 text-black cursor-pointer hover:bg-gray-100 transition"
+//                   onClick={() => navigate(`/property/${property.id}`)}
+//                 >
+//                   <h3 className="text-lg font-semibold mb-2">{property.title}</h3>
+//                   <p className="text-sm"><strong>Location:</strong> {property.location}</p>
+//                   <p className="text-sm"><strong>Rent:</strong> ₹{property.rent}</p>
+//                   <p className="text-sm"><strong>Available From:</strong> {property.availableFrom}</p>
+//                 </div>
+//               </div>
+//             );
+//           })}
+//         </div>
+//       ) : (
+//         <p className="text-center text-black text-lg">No Properties Found</p>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default PropertiesDisplay;
 
 
 // import React, { useEffect, useState } from 'react';
@@ -299,97 +483,97 @@
 // export default PropertiesDisplay;
 
 
-import React, { useEffect, useState } from 'react';
-import { collection, getDocs } from 'firebase/firestore';
-import { db } from '../../../FirebaseConfig/config';
-import { useNavigate } from "react-router-dom";
+// import React, { useEffect, useState } from 'react';
+// import { collection, getDocs } from 'firebase/firestore';
+// import { db } from '../../../FirebaseConfig/config';
+// import { useNavigate } from "react-router-dom";
 
-const PropertiesDisplay = () => {
-  const [allProperties, setAllProperties] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
+// const PropertiesDisplay = () => {
+//   const [allProperties, setAllProperties] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchProperties = async () => {
-      try {
-        const ownersPropertiesRef = collection(db, "Owners");
-        const allOwnerDocs = await getDocs(ownersPropertiesRef);
+//   useEffect(() => {
+//     const fetchProperties = async () => {
+//       try {
+//         const ownersPropertiesRef = collection(db, "Owners");
+//         const allOwnerDocs = await getDocs(ownersPropertiesRef);
 
-        let combinedProperties = [];
+//         let combinedProperties = [];
 
-        allOwnerDocs.docs.forEach((ownerDoc) => {
-          const ownerData = ownerDoc.data();
-          const properties = ownerData.properties || [];
+//         allOwnerDocs.docs.forEach((ownerDoc) => {
+//           const ownerData = ownerDoc.data();
+//           const properties = ownerData.properties || [];
 
-          const propertiesWithIds = properties.map((property, index) => {
-            // If property doesn't have ID, create a consistent one
-            if (!property.id) {
-              const generatedId = `prop_${ownerDoc.id}_${index}_${Date.now()}`;
-              console.warn(`Generated ID for property under owner ${ownerDoc.id}: ${generatedId}`);
-              return {
-                ...property,
-                id: generatedId,
-                ownerId: ownerDoc.id,
-                hasGeneratedId: true
-              };
-            }
-            return {
-              ...property,
-              ownerId: ownerDoc.id,
-              hasGeneratedId: false
-            };
-          });
+//           const propertiesWithIds = properties.map((property, index) => {
+//             // If property doesn't have ID, create a consistent one
+//             if (!property.id) {
+//               const generatedId = `prop_${ownerDoc.id}_${index}_${Date.now()}`;
+//               console.warn(`Generated ID for property under owner ${ownerDoc.id}: ${generatedId}`);
+//               return {
+//                 ...property,
+//                 id: generatedId,
+//                 ownerId: ownerDoc.id,
+//                 hasGeneratedId: true
+//               };
+//             }
+//             return {
+//               ...property,
+//               ownerId: ownerDoc.id,
+//               hasGeneratedId: false
+//             };
+//           });
 
-          combinedProperties = [...combinedProperties, ...propertiesWithIds];
-        });
+//           combinedProperties = [...combinedProperties, ...propertiesWithIds];
+//         });
 
-        setAllProperties(combinedProperties);
-      } catch (error) {
-        console.error("Error fetching properties:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+//         setAllProperties(combinedProperties);
+//       } catch (error) {
+//         console.error("Error fetching properties:", error);
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
 
-    fetchProperties();
-  }, []);
+//     fetchProperties();
+//   }, []);
 
-  const handleCardClick = (ownerId, propertyId) => {
-    if (!propertyId) {
-      console.error("Cannot navigate - property ID missing");
-      return;
-    }
-    navigate(`/property/${ownerId}/${propertyId}`);
-  };
+//   const handleCardClick = (ownerId, propertyId) => {
+//     if (!propertyId) {
+//       console.error("Cannot navigate - property ID missing");
+//       return;
+//     }
+//     navigate(`/property/${ownerId}/${propertyId}`);
+//   };
 
-  if (loading) return <div>Loading properties...</div>;
-  if (allProperties.length === 0) return <div>No properties available</div>;
+//   if (loading) return <div>Loading properties...</div>;
+//   if (allProperties.length === 0) return <div>No properties available</div>;
 
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
-      {allProperties.map((property) => (
-        <div 
-          key={`${property.ownerId}_${property.id}`}
-          className="border rounded-lg overflow-hidden shadow hover:shadow-lg transition cursor-pointer"
-          onClick={() => handleCardClick(property.ownerId, property.id)}
-        >
-          <img
-            src={property.images?.[0] || "https://via.placeholder.com/400x300?text=No+Image"}
-            alt={property.title}
-            className="w-full h-48 object-cover"
-          />
-          <div className="p-4">
-            <h3 className="font-bold text-lg">{property.title}</h3>
-            <p className="text-gray-600">₹{property.rent?.toLocaleString()}/month</p>
-            <p className="text-sm">{property.location}</p>
-            {property.hasGeneratedId && (
-              <p className="text-xs text-yellow-600">Temporary ID assigned</p>
-            )}
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-};
+//   return (
+//     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
+//       {allProperties.map((property) => (
+//         <div 
+//           key={`${property.ownerId}_${property.id}`}
+//           className="border rounded-lg overflow-hidden shadow hover:shadow-lg transition cursor-pointer"
+//           onClick={() => handleCardClick(property.ownerId, property.id)}
+//         >
+//           <img
+//             src={property.images?.[0] || "https://via.placeholder.com/400x300?text=No+Image"}
+//             alt={property.title}
+//             className="w-full h-48 object-cover"
+//           />
+//           <div className="p-4">
+//             <h3 className="font-bold text-lg">{property.title}</h3>
+//             <p className="text-gray-600">₹{property.rent?.toLocaleString()}/month</p>
+//             <p className="text-sm">{property.location}</p>
+//             {property.hasGeneratedId && (
+//               <p className="text-xs text-yellow-600">Temporary ID assigned</p>
+//             )}
+//           </div>
+//         </div>
+//       ))}
+//     </div>
+//   );
+// };
 
-export default PropertiesDisplay;
+// export default PropertiesDisplay;

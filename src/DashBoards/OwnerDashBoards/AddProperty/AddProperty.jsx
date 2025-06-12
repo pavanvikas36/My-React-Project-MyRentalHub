@@ -530,7 +530,7 @@ const AddProperty = () => {
               <div className="space-y-2">
                 <label className="font-medium text-gray-700">Amenities</label>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                  {["WiFi", "Parking", "AC", "Power Backup", "Lift", "Security"].map(
+                  {["Borewell Water", "Parking", "CCTV", "Power Backup", "Lift", "Security"].map(
                     (item, index) => (
                       <label key={index} className="flex items-center gap-2">
                         <input

@@ -5,7 +5,7 @@ const TopLayer = ({ ownerName = "Owner" }) => {
   return (
     <div className="bg-violet-50 py-10 px-4 text-center rounded-b-2xl shadow-md">
       {/* Welcome Message */}
-      <h1 className="text-3xl font-bold text-violet-800 mb-6">
+      <h1 className="text-3xl font-bold text-black mb-6">
         Welcome, {ownerName || "Owner"}!
       </h1>
 
@@ -19,7 +19,7 @@ const TopLayer = ({ ownerName = "Owner" }) => {
         </Link>
         <Link
           to="MyProperty"
-          className="btn bg-violet-100 hover:bg-violet-200 text-violet-700 border border-violet-300 shadow-sm px-6 py-2 rounded-lg transition-all"
+          className="btn bg-white hover:bg-gray-100 text-black border border-gray-300 shadow-sm px-6 py-2 rounded-lg transition-all"
         >
           My Property
         </Link>

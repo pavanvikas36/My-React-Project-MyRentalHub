@@ -191,10 +191,223 @@
 
 
 
+// import React, { useEffect, useState } from 'react';
+// import { doc, getDoc, updateDoc } from 'firebase/firestore';
+// import { db } from '../../../FirebaseConfig/config';
+// import { ChevronLeft, ChevronRight, Pencil, Trash2 } from 'lucide-react';
+// import Swal from 'sweetalert2';
+// import 'sweetalert2/dist/sweetalert2.min.css';
+
+// const MyProperty = () => {
+//   const loggedinUser = JSON.parse(localStorage.getItem("loggedinOwner"));
+//   const [properties, setProperties] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [activeIndexes, setActiveIndexes] = useState({});
+
+//   useEffect(() => {
+//     const getFetchingData = async () => {
+//       const docRef = doc(db, "Owners", loggedinUser.user.displayName);
+//       const getDocRef = await getDoc(docRef);
+
+//       if (getDocRef.exists()) {
+//         const data = getDocRef.data();
+//         setProperties(data.properties || []);
+//       }
+//       setLoading(false);
+//     };
+//     getFetchingData();
+//   }, []);
+
+//   useEffect(() => {
+//     const interval = setInterval(() => {
+//       setActiveIndexes((prevIndexes) => {
+//         const newIndexes = {};
+//         properties.forEach((property, index) => {
+//           const images = property.images || [];
+//           if (images.length > 1) {
+//             const current = prevIndexes[index] || 0;
+//             newIndexes[index] = (current + 1) % images.length;
+//           }
+//         });
+//         return { ...prevIndexes, ...newIndexes };
+//       });
+//     }, 3000);
+
+//     return () => clearInterval(interval);
+//   }, [properties]);
+
+//   const handleNext = (propertyIndex, totalImages) => {
+//     setActiveIndexes((prev) => ({
+//       ...prev,
+//       [propertyIndex]: (prev[propertyIndex] + 1) % totalImages,
+//     }));
+//   };
+
+//   const handlePrev = (propertyIndex, totalImages) => {
+//     setActiveIndexes((prev) => ({
+//       ...prev,
+//       [propertyIndex]: (prev[propertyIndex] - 1 + totalImages) % totalImages,
+//     }));
+//   };
+
+//   const handleEdit = (propertyIndex) => {
+//     alert(`Edit functionality for property at index ${propertyIndex}`);
+//     // You can integrate modal/edit page navigation here
+//   };
+
+//   const handleDelete = async (propertyIndex) => {
+//     const confirm = await Swal.fire({
+//       title: 'Are you sure?',
+//       text: 'This property will be permanently removed!',
+//       icon: 'warning',
+//       iconColor: '#7c3aed', // Tailwind Violet-600
+//       background: '#f5f3ff', // Tailwind Violet-50
+//       color: '#4c1d95',      // Tailwind Violet-900
+//       showCancelButton: true,
+//       confirmButtonColor: '#ede9fe', // Tailwind Violet-100
+//       cancelButtonColor: '#ddd6fe',  // Tailwind Violet-200
+//       confirmButtonText: '<span style="color:#4c1d95;">Yes, delete it!</span>',
+//       cancelButtonText: '<span style="color:#6b21a8;">Cancel</span>',
+//     });
+
+
+//     if (confirm.isConfirmed) {
+//       try {
+//         const updatedProperties = properties.filter((_, index) => index !== propertyIndex);
+
+//         const ownerRef = doc(db, "Owners", loggedinUser.user.displayName);
+//         await updateDoc(ownerRef, {
+//           properties: updatedProperties,
+//         });
+
+//         setProperties(updatedProperties);
+
+//         Swal.fire({
+//           title: 'Deleted!',
+//           text: `Property at index ${propertyIndex} has been deleted.`,
+//           icon: 'success',
+//           iconColor: '#7c3aed',
+//           background: '#f5f3ff',
+//           color: '#4c1d95',
+//           timer: 1000,
+//           showConfirmButton: false,
+//           timerProgressBar: true,
+//         });
+//       } catch (error) {
+//         console.error(error);
+//         Swal.fire({
+//           title: 'Error!',
+//           text: 'Something went wrong while deleting.',
+//           icon: 'error',
+//           iconColor: '#dc2626',
+//           background: '#fef2f2',
+//           color: '#7f1d1d',
+//         });
+//       }
+//     }
+//   };
+
+//   if (loading) {
+//     return (
+//       <div className="flex justify-center mt-12 h-screen">
+//         <div className="w-12 h-12 border-4 border-violet-500 border-dashed rounded-full animate-spin"></div>
+//       </div>
+//     );
+//   }
+
+//   return (
+//     <div className="bg-violet-50 min-h-screen p-6">
+//       {properties.length > 0 ? (
+//         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+//           {properties.map((property, index) => {
+//             const images = property.images || [];
+//             const activeImageIndex = activeIndexes[index] || 0;
+
+//             return (
+//               <div
+//                 key={index}
+//                 className="bg-white shadow-md rounded-2xl border border-violet-200 overflow-hidden"
+//               >
+//                 {/* Image Carousel */}
+//                 <div className="relative h-64">
+//                   {images.length > 0 ? (
+//                     <>
+//                       <img
+//                         src={images[activeImageIndex]}
+//                         alt={`Slide ${activeImageIndex + 1}`}
+//                         className="object-cover w-full h-full transition-all duration-500"
+//                       />
+
+//                       {images.length > 1 && (
+//                         <>
+//                           <button
+//                             onClick={() => handlePrev(index, images.length)}
+//                             className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white/70 hover:bg-white text-violet-600 rounded-full p-1 shadow"
+//                           >
+//                             <ChevronLeft size={20} />
+//                           </button>
+//                           <button
+//                             onClick={() => handleNext(index, images.length)}
+//                             className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white/70 hover:bg-white text-violet-600 rounded-full p-1 shadow"
+//                           >
+//                             <ChevronRight size={20} />
+//                           </button>
+//                         </>
+//                       )}
+//                     </>
+//                   ) : (
+//                     <div className="bg-gray-100 flex items-center justify-center h-full text-gray-400">
+//                       No Image
+//                     </div>
+//                   )}
+//                 </div>
+
+//                 {/* Property Details */}
+//                 <div className="p-4 space-y-2">
+//                   <h2 className="text-lg font-semibold text-violet-800">{property.title}</h2>
+//                   <p className="text-sm text-gray-600">{property.location}</p>
+//                   <p className="text-sm text-gray-500">
+//                     ₹{property.rent} / month • {property.bedrooms} BHK • {property.bathrooms} Bath
+//                   </p>
+//                   <p className="text-xs text-gray-400">
+//                     Available from: {property.availableFrom}
+//                   </p>
+//                 </div>
+
+//                 {/* Edit / Delete Buttons */}
+//                 <div className="card-actions justify-between mt-4 px-4 pb-4">
+//                   <button
+//                     onClick={() => handleEdit(index)}
+//                     className="btn bg-violet-600 hover:bg-violet-700 text-white border-none"
+//                   >
+//                     Edit
+//                   </button>
+//                   <button
+//                     onClick={() => handleDelete(index)}
+//                     className="btn bg-violet-100 hover:bg-violet-200 text-violet-700 border border-violet-300"
+//                   >
+//                     Delete
+//                   </button>
+//                 </div>
+//               </div>
+//             );
+//           })}
+//         </div>
+//       ) : (
+//         <p className="text-center text-gray-600 text-lg">No Property Added Yet</p>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default MyProperty;
+
+
+
 import React, { useEffect, useState } from 'react';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../../../FirebaseConfig/config';
-import { ChevronLeft, ChevronRight, Pencil, Trash2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 
@@ -252,7 +465,6 @@ const MyProperty = () => {
 
   const handleEdit = (propertyIndex) => {
     alert(`Edit functionality for property at index ${propertyIndex}`);
-    // You can integrate modal/edit page navigation here
   };
 
   const handleDelete = async (propertyIndex) => {
@@ -260,26 +472,21 @@ const MyProperty = () => {
       title: 'Are you sure?',
       text: 'This property will be permanently removed!',
       icon: 'warning',
-      iconColor: '#7c3aed', // Tailwind Violet-600
-      background: '#f5f3ff', // Tailwind Violet-50
-      color: '#4c1d95',      // Tailwind Violet-900
+      iconColor: '#7c3aed',
+      background: '#f5f3ff',
+      color: '#000',
       showCancelButton: true,
-      confirmButtonColor: '#ede9fe', // Tailwind Violet-100
-      cancelButtonColor: '#ddd6fe',  // Tailwind Violet-200
-      confirmButtonText: '<span style="color:#4c1d95;">Yes, delete it!</span>',
-      cancelButtonText: '<span style="color:#6b21a8;">Cancel</span>',
+      confirmButtonColor: '#ede9fe',
+      cancelButtonColor: '#ddd6fe',
+      confirmButtonText: '<span style="color:#000;">Yes, delete it!</span>',
+      cancelButtonText: '<span style="color:#000;">Cancel</span>',
     });
-
 
     if (confirm.isConfirmed) {
       try {
         const updatedProperties = properties.filter((_, index) => index !== propertyIndex);
-
         const ownerRef = doc(db, "Owners", loggedinUser.user.displayName);
-        await updateDoc(ownerRef, {
-          properties: updatedProperties,
-        });
-
+        await updateDoc(ownerRef, { properties: updatedProperties });
         setProperties(updatedProperties);
 
         Swal.fire({
@@ -288,7 +495,7 @@ const MyProperty = () => {
           icon: 'success',
           iconColor: '#7c3aed',
           background: '#f5f3ff',
-          color: '#4c1d95',
+          color: '#000',
           timer: 1000,
           showConfirmButton: false,
           timerProgressBar: true,
@@ -301,7 +508,7 @@ const MyProperty = () => {
           icon: 'error',
           iconColor: '#dc2626',
           background: '#fef2f2',
-          color: '#7f1d1d',
+          color: '#000',
         });
       }
     }
@@ -310,13 +517,13 @@ const MyProperty = () => {
   if (loading) {
     return (
       <div className="flex justify-center mt-12 h-screen">
-        <div className="w-12 h-12 border-4 border-violet-500 border-dashed rounded-full animate-spin"></div>
+        <div className="w-12 h-12 border-4 border-violet-600 border-dashed rounded-full animate-spin"></div>
       </div>
     );
   }
 
   return (
-    <div className="bg-violet-50 min-h-screen p-6">
+    <div className="bg-white min-h-screen p-6">
       {properties.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {properties.map((property, index) => {
@@ -326,7 +533,7 @@ const MyProperty = () => {
             return (
               <div
                 key={index}
-                className="bg-white shadow-md rounded-2xl border border-violet-200 overflow-hidden"
+                className="bg-white shadow-md rounded-2xl border border-gray-300 overflow-hidden"
               >
                 {/* Image Carousel */}
                 <div className="relative h-64">
@@ -342,13 +549,13 @@ const MyProperty = () => {
                         <>
                           <button
                             onClick={() => handlePrev(index, images.length)}
-                            className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white/70 hover:bg-white text-violet-600 rounded-full p-1 shadow"
+                            className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white/70 hover:bg-white text-black rounded-full p-1 shadow"
                           >
                             <ChevronLeft size={20} />
                           </button>
                           <button
                             onClick={() => handleNext(index, images.length)}
-                            className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white/70 hover:bg-white text-violet-600 rounded-full p-1 shadow"
+                            className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white/70 hover:bg-white text-black rounded-full p-1 shadow"
                           >
                             <ChevronRight size={20} />
                           </button>
@@ -356,7 +563,7 @@ const MyProperty = () => {
                       )}
                     </>
                   ) : (
-                    <div className="bg-gray-100 flex items-center justify-center h-full text-gray-400">
+                    <div className="bg-gray-100 flex items-center justify-center h-full text-black">
                       No Image
                     </div>
                   )}
@@ -364,12 +571,12 @@ const MyProperty = () => {
 
                 {/* Property Details */}
                 <div className="p-4 space-y-2">
-                  <h2 className="text-lg font-semibold text-violet-800">{property.title}</h2>
-                  <p className="text-sm text-gray-600">{property.location}</p>
-                  <p className="text-sm text-gray-500">
+                  <h2 className="text-lg font-semibold text-black">{property.title}</h2>
+                  <p className="text-sm text-black">{property.location}</p>
+                  <p className="text-sm text-black">
                     ₹{property.rent} / month • {property.bedrooms} BHK • {property.bathrooms} Bath
                   </p>
-                  <p className="text-xs text-gray-400">
+                  <p className="text-xs text-black">
                     Available from: {property.availableFrom}
                   </p>
                 </div>
@@ -384,7 +591,7 @@ const MyProperty = () => {
                   </button>
                   <button
                     onClick={() => handleDelete(index)}
-                    className="btn bg-violet-100 hover:bg-violet-200 text-violet-700 border border-violet-300"
+                    className="btn bg-white hover:bg-gray-100 text-black border border-gray-300"
                   >
                     Delete
                   </button>
@@ -394,7 +601,7 @@ const MyProperty = () => {
           })}
         </div>
       ) : (
-        <p className="text-center text-gray-600 text-lg">No Property Added Yet</p>
+        <p className="text-center text-black text-lg">No Property Added Yet</p>
       )}
     </div>
   );

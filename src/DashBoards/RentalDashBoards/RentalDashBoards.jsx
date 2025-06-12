@@ -10,14 +10,16 @@ const RentalDashBoards = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row gap-6 px-4 py-6">
+    <div className="h-screen flex">
       {/* Sidebar Filter */}
-      <div className="w-full md:w-1/4 lg:w-1/5">
-        <PropertiesFilter onFilter={handleFilter} />
+      <div className="w-1/4 p-4">
+        <div className="sticky top-4">
+          <PropertiesFilter onFilter={handleFilter} />
+        </div>
       </div>
 
-      {/* Product Cards */}
-      <div className="w-full md:w-3/4 lg:w-4/5">
+      {/* Scrollable PropertiesDisplay */}
+      <div className="w-3/4 p-4 overflow-y-auto h-screen">
         <PropertiesDisplay filters={filters} />
       </div>
     </div>

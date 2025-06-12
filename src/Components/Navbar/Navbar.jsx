@@ -17,6 +17,7 @@ const Navbar = () => {
     title: 'Are you sure?',
     text: "You will be logged out!",
     icon: 'warning',
+    iconColor: '#8b5cf6', // Tailwind Violet-500
     showCancelButton: true,
     confirmButtonColor: '#7c3aed', // Tailwind Violet-600
     cancelButtonColor: '#d33',
@@ -36,17 +37,17 @@ const Navbar = () => {
         title: 'Logout Successful!',
         text: 'You have been securely logged out.',
         icon: 'info',
-        iconColor: '#7c3aed',
+        iconColor: '#8b5cf6', // Tailwind Violet-500
         background: '#f5f3ff',
-        color: '#4c1d95',
-        timer: 2000,
+        color: '#4c1d95',      // Tailwind Violet-900
+        timer: 1000,
         timerProgressBar: true,
         showConfirmButton: false,
       });
 
       setTimeout(() => {
         navegate("/login"); // Small note: make sure this is spelled `navigate` if using `useNavigate()`
-      }, 2000);
+      }, 1000);
     } catch (error) {
       console.log(error);
     }
@@ -74,9 +75,9 @@ const Navbar = () => {
             {/* <li><Link className="hover:text-violet-300">Add Property</Link></li>
             <li><Link to="/about" className="hover:text-violet-300">My Properties</Link></li> */}
           </> : <>
-            <li><Link to="/RentalDashBoard" className="hover:text-violet-300">Home</Link></li>
+            <li><Link to="/home" className="hover:text-violet-300">Home</Link></li>
             <li><Link to="/about" className="hover:text-violet-300">About</Link></li>
-            <li><Link to="/properties" className="hover:text-violet-300">Properties</Link></li>
+            <li><Link to="/RentalDashboard" className="hover:text-violet-300">Properties</Link></li>
             <li><Link to="/contact" className="hover:text-violet-300">Contact</Link></li>
           </>}
         </ul>

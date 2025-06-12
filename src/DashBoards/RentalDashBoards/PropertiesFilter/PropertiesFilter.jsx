@@ -8,7 +8,6 @@ const PropertiesFilter = ({ properties = [], onFilter }) => {
     type: "",
   });
 
-  // Apply filters whenever they change (optional - remove if you prefer manual filter application)
   useEffect(() => {
     handleFilter();
   }, [filters]);
@@ -22,7 +21,6 @@ const PropertiesFilter = ({ properties = [], onFilter }) => {
     if (!onFilter) return;
 
     const filteredProperties = properties.filter((property) => {
-      // Location filter (case insensitive)
       if (
         filters.location &&
         !property.location.toLowerCase().includes(filters.location.toLowerCase())
@@ -30,11 +28,9 @@ const PropertiesFilter = ({ properties = [], onFilter }) => {
         return false;
       }
 
-      // Price range filter
       if (filters.priceRange) {
         const price = parseInt(property.rent);
         const [min, max] = filters.priceRange.split("-").map(Number);
-        
         if (max === 0) {
           if (price < min) return false;
         } else {
@@ -42,12 +38,10 @@ const PropertiesFilter = ({ properties = [], onFilter }) => {
         }
       }
 
-      // Bedrooms filter
       if (filters.bedrooms && property.bedrooms !== filters.bedrooms) {
         return false;
       }
 
-      // Property type filter
       if (
         filters.type &&
         property.type.toLowerCase() !== filters.type.toLowerCase()
@@ -68,17 +62,17 @@ const PropertiesFilter = ({ properties = [], onFilter }) => {
       bedrooms: "",
       type: "",
     });
-    onFilter(properties); // Reset to show all properties
+    onFilter(properties);
   };
 
   return (
-    <div className="bg-violet-100 text-violet-900 p-6 rounded-2xl shadow-lg w-full h-full sticky top-4">
-      <h2 className="text-xl font-bold mb-4">Filter Properties</h2>
+    <div className="bg-violet-100 text-black p-6 rounded-2xl shadow-lg w-full h-full sticky top-4">
+      <h2 className="text-xl font-bold mb-4 text-black">Filter Properties</h2>
 
       <div className="flex flex-col gap-4">
         {/* Location Filter */}
         <div>
-          <label htmlFor="location" className="block text-sm font-medium mb-1">
+          <label htmlFor="location" className="block text-sm font-medium mb-1 text-black">
             Location
           </label>
           <input
@@ -88,13 +82,13 @@ const PropertiesFilter = ({ properties = [], onFilter }) => {
             value={filters.location}
             onChange={handleChange}
             placeholder="Enter location"
-            className="w-full p-2 rounded-lg border border-violet-300 focus:outline-none focus:ring-2 focus:ring-violet-500"
+            className="w-full p-2 rounded-lg border border-violet-300 focus:outline-none focus:ring-2 focus:ring-violet-500 text-black bg-white"
           />
         </div>
 
         {/* Price Range Filter */}
         <div>
-          <label htmlFor="priceRange" className="block text-sm font-medium mb-1">
+          <label htmlFor="priceRange" className="block text-sm font-medium mb-1 text-black">
             Price Range
           </label>
           <select
@@ -102,7 +96,7 @@ const PropertiesFilter = ({ properties = [], onFilter }) => {
             name="priceRange"
             value={filters.priceRange}
             onChange={handleChange}
-            className="w-full p-2 rounded-lg border border-violet-300 focus:outline-none focus:ring-2 focus:ring-violet-500"
+            className="w-full p-2 rounded-lg border border-violet-300 focus:outline-none focus:ring-2 focus:ring-violet-500 text-black bg-white"
           >
             <option value="">Select Price Range</option>
             <option value="0-5000">Below ₹5,000</option>
@@ -115,7 +109,7 @@ const PropertiesFilter = ({ properties = [], onFilter }) => {
 
         {/* Bedrooms Filter */}
         <div>
-          <label htmlFor="bedrooms" className="block text-sm font-medium mb-1">
+          <label htmlFor="bedrooms" className="block text-sm font-medium mb-1 text-black">
             Bedrooms
           </label>
           <select
@@ -123,7 +117,7 @@ const PropertiesFilter = ({ properties = [], onFilter }) => {
             name="bedrooms"
             value={filters.bedrooms}
             onChange={handleChange}
-            className="w-full p-2 rounded-lg border border-violet-300 focus:outline-none focus:ring-2 focus:ring-violet-500"
+            className="w-full p-2 rounded-lg border border-violet-300 focus:outline-none focus:ring-2 focus:ring-violet-500 text-black bg-white"
           >
             <option value="">Select BHK</option>
             <option value="1">1 BHK</option>
@@ -135,7 +129,7 @@ const PropertiesFilter = ({ properties = [], onFilter }) => {
 
         {/* Property Type Filter */}
         <div>
-          <label htmlFor="type" className="block text-sm font-medium mb-1">
+          <label htmlFor="type" className="block text-sm font-medium mb-1 text-black">
             Property Type
           </label>
           <select
@@ -143,7 +137,7 @@ const PropertiesFilter = ({ properties = [], onFilter }) => {
             name="type"
             value={filters.type}
             onChange={handleChange}
-            className="w-full p-2 rounded-lg border border-violet-300 focus:outline-none focus:ring-2 focus:ring-violet-500"
+            className="w-full p-2 rounded-lg border border-violet-300 focus:outline-none focus:ring-2 focus:ring-violet-500 text-black bg-white"
           >
             <option value="">Select Type</option>
             <option value="apartment">Apartment</option>
@@ -163,7 +157,7 @@ const PropertiesFilter = ({ properties = [], onFilter }) => {
           </button>
           <button
             onClick={handleReset}
-            className="flex-1 bg-white hover:bg-gray-100 text-violet-600 font-semibold px-4 py-2 rounded-lg border border-violet-300 transition duration-300"
+            className="flex-1 bg-black hover:bg-gray-800 text-white font-semibold px-4 py-2 rounded-lg transition duration-300"
           >
             Reset
           </button>
