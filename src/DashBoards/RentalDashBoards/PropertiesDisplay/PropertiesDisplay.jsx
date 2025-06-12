@@ -44,45 +44,171 @@
 
 
 // Importent
-import React, { useEffect, useState } from 'react';
-import { collection, getDocs } from 'firebase/firestore';
-import { db } from '../../../FirebaseConfig/config';
+// import React, { useEffect, useState } from 'react';
+// import { collection, getDocs } from 'firebase/firestore';
+// import { db } from '../../../FirebaseConfig/config';
 
-const PropertiesDisplay = () => {
-  const [allProperties, setAllProperties] = useState([]);
+// const PropertiesDisplay = () => {
+//   const [allProperties, setAllProperties] = useState([]);
 
+//   useEffect(() => {
+//     const fetchingProperties = async () => {
+//       try {
+//         const ownersPropertiesRef = collection(db, "Owners");
+//         const allOwnerProperties = await getDocs(ownersPropertiesRef);
+//         let propertiesFromDoc = [];
+
+//         allOwnerProperties.docs.forEach((singleOwnerDoc) => {
+//           const ownerData = singleOwnerDoc.data();
+//           const individualProperties = ownerData.properties || [];
+//           individualProperties.forEach((property) => {
+//             propertiesFromDoc.push(property);
+//           });
+//         });
+
+//         setAllProperties(propertiesFromDoc);
+//       } catch (error) {
+//         console.error('Error fetching properties:', error);
+//       }
+//     };
+//     fetchingProperties();
+//   }, []);
+
+//   return (
+//     <div className="p-6 bg-gray-100 rounded-2xl min-h-screen">
+//       <h2 className="text-2xl font-bold mb-6 text-black text-center">Available Rental Properties</h2>
+//       {allProperties.length > 0 ? (
+//         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+//           {allProperties.map((property, index) => {
+//             const images = property.images?.slice(0, 3) || [];
+//             return (
+//               <div key={index} className="bg-white rounded-2xl shadow-md overflow-hidden">
+//                 <div className="relative h-56 w-full">
+//                   <div className="carousel w-full h-full">
+//                     {images.map((image, imgIndex) => (
+//                       <div
+//                         key={imgIndex}
+//                         className={`carousel-item w-full h-full ${imgIndex === 0 ? 'block' : 'hidden'}`}
+//                         style={{
+//                           backgroundImage: `url(${image})`,
+//                           backgroundSize: 'cover',
+//                           backgroundPosition: 'center'
+//                         }}
+//                       />
+//                     ))}
+//                   </div>
+//                 </div>
+//                 <div className="p-4 text-black cursor-pointer">
+//                   <h3 className="text-lg font-semibold mb-2">{property.title}</h3>
+//                   <p className="text-sm"><strong>Location:</strong> {property.location}</p>
+//                   <p className="text-sm"><strong>Rent:</strong> ₹{property.rent}</p>
+//                   <p className="text-sm"><strong>Available From:</strong> {property.availableFrom}</p>
+//                 </div>
+//               </div>
+//             );
+//           })}
+//         </div>
+//       ) : (
+//         <p className="text-center text-black text-lg">No Properties Found</p>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default PropertiesDisplay;
+
+
+
+// Important 2
+// import React from 'react';
+
+// const PropertiesDisplay = ({ allProperties = [] }) => {
+//   console.log("Received Properties:", allProperties);
+//   return (
+//     <div className="p-6 bg-gray-100 rounded-2xl min-h-screen">
+//       <h2 className="text-2xl font-bold mb-6 text-black text-center">Available Rental Properties</h2>
+//       {allProperties.length > 0 ? (
+//         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+//           {allProperties.map((property, index) => {
+//             const images = property.images?.slice(0, 3) || [];
+//             return (
+//               <div key={index} className="bg-white rounded-2xl shadow-md overflow-hidden">
+//                 <div className="relative h-56 w-full">
+//                   <div className="carousel w-full h-full">
+//                     {images.map((image, imgIndex) => (
+//                       <div
+//                         key={imgIndex}
+//                         className={`carousel-item w-full h-full ${imgIndex === 0 ? 'block' : 'hidden'}`}
+//                         style={{
+//                           backgroundImage: `url(${image})`,
+//                           backgroundSize: 'cover',
+//                           backgroundPosition: 'center'
+//                         }}
+//                       />
+//                     ))}
+//                   </div>
+//                 </div>
+//                 <div className="p-4 text-black cursor-pointer">
+//                   <h3 className="text-lg font-semibold mb-2">{property.title}</h3>
+//                   <p className="text-sm"><strong>Location:</strong> {property.location}</p>
+//                   <p className="text-sm"><strong>Rent:</strong> ₹{property.rent}</p>
+//                   <p className="text-sm"><strong>Available From:</strong> {property.availableFrom}</p>
+//                 </div>
+//               </div>
+//             );
+//           })}
+//         </div>
+//       ) : (
+//         <p className="text-center text-black text-lg">No Properties Found</p>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default PropertiesDisplay;
+
+
+
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+const PropertiesDisplay = ({ allProperties }) => {
+  const [selectedProperty, setSelectedProperty] = useState(null);
+  const navigate = useNavigate()
+
+  // Optional: log the updated state when it changes
   useEffect(() => {
-    const fetchingProperties = async () => {
-      try {
-        const ownersPropertiesRef = collection(db, "Owners");
-        const allOwnerProperties = await getDocs(ownersPropertiesRef);
-        let propertiesFromDoc = [];
+    if (selectedProperty) {
+      console.log("Selected Property:", selectedProperty);
+    }
+  }, [selectedProperty]);
 
-        allOwnerProperties.docs.forEach((singleOwnerDoc) => {
-          const ownerData = singleOwnerDoc.data();
-          const individualProperties = ownerData.properties || [];
-          individualProperties.forEach((property) => {
-            propertiesFromDoc.push(property);
-          });
-        });
+  const handlePropertyClick = (property) => {
+    const user = localStorage.getItem("loggedinRental");
 
-        setAllProperties(propertiesFromDoc);
-      } catch (error) {
-        console.error('Error fetching properties:', error);
-      }
-    };
-    fetchingProperties();
-  }, []);
+    if(user){
+      setSelectedProperty(property);
+      navigate("/propertydetails", { state: { selectedProperty: property } });
+    }else{
+      navigate("/login");
+    }
+  };
 
   return (
     <div className="p-6 bg-gray-100 rounded-2xl min-h-screen">
       <h2 className="text-2xl font-bold mb-6 text-black text-center">Available Rental Properties</h2>
+
       {allProperties.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {allProperties.map((property, index) => {
             const images = property.images?.slice(0, 3) || [];
+
             return (
-              <div key={index} className="bg-white rounded-2xl shadow-md overflow-hidden">
+              <div
+                key={index}
+                className="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-lg transition cursor-pointer"
+                onClick={() => handlePropertyClick(property)}
+              >
                 <div className="relative h-56 w-full">
                   <div className="carousel w-full h-full">
                     {images.map((image, imgIndex) => (
@@ -98,7 +224,7 @@ const PropertiesDisplay = () => {
                     ))}
                   </div>
                 </div>
-                <div className="p-4 text-black cursor-pointer">
+                <div className="p-4 text-black">
                   <h3 className="text-lg font-semibold mb-2">{property.title}</h3>
                   <p className="text-sm"><strong>Location:</strong> {property.location}</p>
                   <p className="text-sm"><strong>Rent:</strong> ₹{property.rent}</p>
@@ -116,6 +242,9 @@ const PropertiesDisplay = () => {
 };
 
 export default PropertiesDisplay;
+
+
+
 
 
 // Auto carousel Code

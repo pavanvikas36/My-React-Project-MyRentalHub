@@ -66,7 +66,7 @@ const PropertiesFilter = ({ properties = [], onFilter }) => {
   };
 
   return (
-    <div className="bg-violet-100 text-black p-6 rounded-2xl shadow-lg w-full h-full sticky top-4">
+    <div className="bg-violet-100 text-black p-6 rounded-2xl shadow-lg w-full h-full">
       <h2 className="text-xl font-bold mb-4 text-black">Filter Properties</h2>
 
       <div className="flex flex-col gap-4">
@@ -157,7 +157,7 @@ const PropertiesFilter = ({ properties = [], onFilter }) => {
           </button>
           <button
             onClick={handleReset}
-            className="flex-1 bg-black hover:bg-gray-800 text-white font-semibold px-4 py-2 rounded-lg transition duration-300"
+            className="flex-1 bg-white hover:bg-gray-100 text-black font-semibold px-4 py-2 rounded-lg transition duration-300"
           >
             Reset
           </button>

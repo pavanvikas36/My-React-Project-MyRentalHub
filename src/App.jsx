@@ -10,14 +10,18 @@ import OwnerDashBoards from './DashBoards/OwnerDashBoards/OwnerDashBoards';
 import AddProperty from './DashBoards/OwnerDashBoards/AddProperty/AddProperty';
 import MyProperty from './DashBoards/OwnerDashBoards/MyProperty/MyProperty';
 import RentalDashBoards from './DashBoards/RentalDashBoards/RentalDashBoards';
-import About from './Components/About/AboutComponent';
+import PropertyDetails from './DashBoards/RentalDashBoards/PropertyDetails/PropertyDetails';
+import AboutUs from './Components/About/AboutComponent';
+// import AboutPage from './Components/About/AboutPage/AboutPage';
+// import About from './Components/About/AboutComponent';
 
 const App = () => {
   return (
     <div>
       <Navbar />
       <Routes>
-        <Route path='/about' element={<About />}></Route>
+        <Route path='/about' element={<AboutUs />} />
+        {/* <Route path='/about' element={<AboutPage />}></Route> */}
         <Route path='/home' element={<Home />} />
         <Route path='/login' element={<Login />} />
         <Route path='/signup' element={<Signup />} />
@@ -25,7 +29,10 @@ const App = () => {
           <Route path='AddProperty' element={<AddProperty />} />
           <Route path='MyProperty' element={<MyProperty />} />
         </Route>
-        <Route path='/RentalDashBoard' element={<RentalDashBoards />}></Route>
+        <Route path='/RentalDashBoard' element={<RentalDashBoards />}>
+          {/* <Route path='propertydetails' element={<PropertyDetails />} /> */}
+        </Route>
+        <Route path='/propertydetails' element={<PropertyDetails />} />
       </Routes>
     </div>
   )

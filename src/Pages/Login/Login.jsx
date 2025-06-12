@@ -169,11 +169,13 @@ const Login = () => {
 
       if (role === "Owner") {
         localStorage.setItem("loggedinOwner", JSON.stringify(loggedinUser));
+        navigate(`/${role}DashBoard`);
       } else {
         localStorage.setItem("loggedinRental", JSON.stringify(loggedinUser));
+        navigate("/home")
       }
 
-      navigate(`/${role}DashBoard`);
+      // navigate(`/${role}DashBoard`);
 
     } catch (error) {
       console.error("Login error:", error);
