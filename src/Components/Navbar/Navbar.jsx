@@ -4,6 +4,7 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import { signOut, getAuth } from "firebase/auth";
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
+import { BiHomeHeart } from "react-icons/bi";
 
 const Navbar = () => {
   const navegate = useNavigate()
@@ -88,6 +89,7 @@ const Navbar = () => {
         {/* Desktop Login/Signup */}
         <div className="hidden md:flex gap-3 items-center">
           {loggedinOwner || loggedinRental ? <>
+            <Link to="/mywishlist" className="text-white hover:text-violet-400 transition text-2xl" title="My Wishlist"><BiHomeHeart /></Link>
             <button onClick={handleLogout}><NavLink className="text-white bg-violet-600 px-4 py-2 rounded-md hover:bg-violet-500 transition font-medium">Logout</NavLink></button>
           </> : <>
             <NavLink to="/login" className="text-white hover:text-violet-300 font-medium transition">Login</NavLink>
@@ -109,6 +111,7 @@ const Navbar = () => {
         </div>
 
         {/* Mobile Menu */}
+        <Link to="/mywishlist" className="text-white hover:text-violet-400 transition text-2xl" title="My Wishlist"><BiHomeHeart /></Link>
         <div className="dropdown dropdown-end lg:hidden">
           <label tabIndex={0} className="btn btn-ghost text-white">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

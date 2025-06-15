@@ -168,15 +168,96 @@
 // export default PropertiesDisplay;
 
 
+// Important Code
+// import React, { useState, useEffect } from 'react';
+// import { useNavigate } from 'react-router-dom';
+
+// const PropertiesDisplay = ({ allProperties }) => {
+//   const [selectedProperty, setSelectedProperty] = useState(null);
+//   const navigate = useNavigate()
+//   console.log(allProperties)
+
+//   // Optional: log the updated state when it changes
+//   useEffect(() => {
+//     if (selectedProperty) {
+//       console.log("Selected Property:", selectedProperty);
+//     }
+//   }, [selectedProperty]);
+
+//   const handlePropertyClick = (property) => {
+//     const user = localStorage.getItem("loggedinRental");
+
+//     if(user){
+//       setSelectedProperty(property);
+//       navigate("/propertydetails", { state: { selectedProperty: property } });
+//     }else{
+//       navigate("/login");
+//     }
+//   };
+
+//   return (
+//     <div className="p-6 bg-gray-100 rounded-2xl min-h-screen">
+//       <h2 className="text-2xl font-bold mb-6 text-black text-center">Available Rental Properties</h2>
+
+//       {allProperties.length > 0 ? (
+//         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+//           {allProperties.map((property, index) => {
+//             const images = property.images?.slice(0, 3) || [];
+
+//             return (
+//               <div
+//                 key={index}
+//                 className="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-lg transition cursor-pointer"
+//                 onClick={() => handlePropertyClick(property)}
+//               >
+//                 <div className="relative h-56 w-full">
+//                   <div className="carousel w-full h-full">
+//                     {images.map((image, imgIndex) => (
+//                       <div
+//                         key={imgIndex}
+//                         className={`carousel-item w-full h-full ${imgIndex === 0 ? 'block' : 'hidden'}`}
+//                         style={{
+//                           backgroundImage: `url(${image})`,
+//                           backgroundSize: 'cover',
+//                           backgroundPosition: 'center'
+//                         }}
+//                       />
+//                     ))}
+//                   </div>
+//                 </div>
+//                 <div className="p-4 text-black">
+//                   <h3 className="text-lg font-semibold mb-2">{property.title}</h3>
+//                   <p className="text-sm"><strong>Location:</strong> {property.location}</p>
+//                   <p className="text-sm"><strong>Rent:</strong> ₹{property.rent}</p>
+//                   <p className="text-sm"><strong>Available From:</strong> {property.availableFrom}</p>
+//                 </div>
+//               </div>
+//             );
+//           })}
+//         </div>
+//       ) : (
+//         <p className="text-center text-black text-lg">No Properties Found</p>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default PropertiesDisplay;
 
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const PropertiesDisplay = ({ allProperties }) => {
   const [selectedProperty, setSelectedProperty] = useState(null);
-  const navigate = useNavigate()
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
-  // Optional: log the updated state when it changes
+  useEffect(() => {
+    // Simulate loading delay
+    const timer = setTimeout(() => setLoading(false), 1000);
+    return () => clearTimeout(timer);
+  }, [allProperties]);
+
   useEffect(() => {
     if (selectedProperty) {
       console.log("Selected Property:", selectedProperty);
@@ -186,10 +267,10 @@ const PropertiesDisplay = ({ allProperties }) => {
   const handlePropertyClick = (property) => {
     const user = localStorage.getItem("loggedinRental");
 
-    if(user){
+    if (user) {
       setSelectedProperty(property);
       navigate("/propertydetails", { state: { selectedProperty: property } });
-    }else{
+    } else {
       navigate("/login");
     }
   };
@@ -198,7 +279,11 @@ const PropertiesDisplay = ({ allProperties }) => {
     <div className="p-6 bg-gray-100 rounded-2xl min-h-screen">
       <h2 className="text-2xl font-bold mb-6 text-black text-center">Available Rental Properties</h2>
 
-      {allProperties.length > 0 ? (
+      {loading ? (
+        <div className="flex justify-center items-center h-40">
+          <div className="w-12 h-12 border-4 border-violet-500 border-dashed rounded-full animate-spin"></div>
+        </div>
+      ) : allProperties.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {allProperties.map((property, index) => {
             const images = property.images?.slice(0, 3) || [];
@@ -242,7 +327,6 @@ const PropertiesDisplay = ({ allProperties }) => {
 };
 
 export default PropertiesDisplay;
-
 
 
 
