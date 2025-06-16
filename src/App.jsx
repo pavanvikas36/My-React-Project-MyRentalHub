@@ -1,8 +1,7 @@
-import React from 'react'
+import React from 'react';
 import './index.css';
 import { Routes, Route } from 'react-router-dom';
-import Navbar from './Components/Navbar/Navbar'
-import Footer from './Components/Footer/Footer';
+import Navbar from './Components/Navbar/Navbar';
 import Signup from './Pages/Signup/Signup';
 import Login from './Pages/Login/Login';
 import Home from './Components/Home/Home';
@@ -16,8 +15,6 @@ import MyWishlist from './Components/Navbar/MyWishlist/MyWishlist';
 import ContactUs from './Components/ContactUs/ContactUs';
 import Bookings from './DashBoards/OwnerDashBoards/Bookings/Bookings';
 import MyBookings from './DashBoards/RentalDashBoards/MyBookings/MyBookings';
-// import AboutPage from './Components/About/AboutPage/AboutPage';
-// import About from './Components/About/AboutComponent';
 
 const App = () => {
   return (
@@ -27,8 +24,7 @@ const App = () => {
         <Route path='/' element={<Home />} />
         <Route path='/contact' element={<ContactUs />} />
         <Route path='/about' element={<AboutUs />} />
-        {/* <Route path='/about' element={<AboutPage />}></Route> */}
-        {/* <Route path='/home' element={<Home />} /> */}
+        <Route path='/home' element={<Home />} />
         <Route path='/login' element={<Login />} />
         <Route path='/signup' element={<Signup />} />
         <Route path='/ownerDashBoard' element={<OwnerDashBoards />} >
@@ -36,9 +32,7 @@ const App = () => {
           <Route path='MyProperty' element={<MyProperty />} />
           <Route path='Bookings' element={<Bookings />} />
         </Route>
-        <Route path='/RentalDashBoard' element={<RentalDashBoards />}>
-          {/* <Route path='propertydetails' element={<PropertyDetails />} /> */}
-        </Route>
+        <Route path='/RentalDashBoard' element={<RentalDashBoards />}></Route>
         <Route path='/propertydetails' element={<PropertyDetails />} />
         <Route path= "/mywishlist" element={<MyWishlist />} />
         <Route path='/MyBookings' element={<MyBookings />} />
@@ -47,7 +41,7 @@ const App = () => {
   )
 }
 
-export default App
+export default App;
 
 
 // import React from 'react';
