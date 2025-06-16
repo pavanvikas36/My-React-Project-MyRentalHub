@@ -424,6 +424,7 @@ const MyProperty = () => {
 
       if (getDocRef.exists()) {
         const data = getDocRef.data();
+        console.log(data)
         setProperties(data.properties || []);
       }
       setLoading(false);

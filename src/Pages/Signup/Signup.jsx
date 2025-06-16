@@ -176,8 +176,9 @@ import React, { useState } from "react";
 import "./Signup.css";
 import { authentication, db } from "../../FirebaseConfig/config";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { setDoc, doc } from "firebase/firestore";
+import { setDoc, doc, getDoc } from "firebase/firestore";
 import { Link, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -198,7 +199,21 @@ const Signup = () => {
 
   const handleSignupSubmit = async (e) => {
     e.preventDefault();
+
     try {
+      const userDocRef = doc(db, `${signupDetails.role}s`, signupDetails.name);
+      const userDocSnap = await getDoc(userDocRef);
+
+      if (userDocSnap.exists()) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Name Already Taken',
+          text: 'This name is already registered. Please use a different name.',
+          confirmButtonColor: '#8b5cf6'
+        });
+        return;
+      }
+
       const accountCreated = await createUserWithEmailAndPassword(
         authentication,
         signupDetails.email,
@@ -209,7 +224,7 @@ const Signup = () => {
         displayName: signupDetails.name
       });
 
-      await setDoc(doc(db, `${signupDetails.role}s`, signupDetails.name), {
+      await setDoc(userDocRef, {
         name: signupDetails.name,
         email: signupDetails.email,
         role: signupDetails.role,
@@ -217,13 +232,26 @@ const Signup = () => {
         id: accountCreated.user.uid
       });
 
-      showAlert("🎉 Account Created Successfully!");
-      setTimeout(() => navigate("/login"), 1500);
+      Swal.fire({
+        icon: 'success',
+        title: '🎉 Account Created',
+        text: 'You can now login with your credentials.',
+        confirmButtonColor: '#22c55e'
+      });
+
+      setTimeout(() => navigate("/login"), 1000);
+
     } catch (error) {
-      showAlert("⚠️ Please provide valid details.");
       console.error("Signup Error:", error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Signup Failed',
+        text: 'Please provide valid details or try again later.',
+        confirmButtonColor: '#ef4444'
+      });
     }
   };
+
 
   return (
     <div className="w-full bg-gradient-to-r from-violet-900 via-violet-800 to-violet-700 min-h-screen flex items-center justify-center px-4">
@@ -332,7 +360,7 @@ const Signup = () => {
           Already have an account?{" "}
           <Link
             to="/login"
-            className="font-semibold underline text-black hover:text-white"
+            className="font-semibold underline text-black hover:text-black"
           >
             Login here
           </Link>

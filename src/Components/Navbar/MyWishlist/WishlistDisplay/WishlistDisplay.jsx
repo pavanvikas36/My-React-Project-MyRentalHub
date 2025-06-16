@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const WishlistDisplay = ({ myWishlist }) => {
+const WishlistDisplay = ({ myWishlist, handleDelete }) => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
@@ -43,12 +43,20 @@ const WishlistDisplay = ({ myWishlist }) => {
                 <p className="text-sm text-gray-500 mb-2">📞 {item.ownerNum}</p>
               </div>
 
-              <button
-                onClick={() => handleBookNow(item)}
-                className="mt-3 bg-violet-600 text-white py-2 px-4 rounded-lg hover:bg-violet-700 transition w-full"
-              >
-                🏠 Book Now
-              </button>
+              <div className="flex gap-2 mt-3">
+                <button
+                  onClick={() => handleDelete(item.propertyId)}
+                  className="flex-1 bg-red-500 text-white py-1 px-2 text-sm rounded-md hover:bg-red-600 transition"
+                >
+                  ❌ Remove
+                </button>
+                <button
+                  onClick={() => handleBookNow(item)}
+                  className="flex-1 bg-violet-600 text-white py-1 px-2 text-sm rounded-md hover:bg-violet-700 transition"
+                >
+                  🏠 Book Now
+                </button>
+              </div>
             </div>
           ))}
         </div>

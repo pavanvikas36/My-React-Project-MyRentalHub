@@ -241,6 +241,7 @@ import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { doc, setDoc, updateDoc, arrayUnion, getDoc } from 'firebase/firestore';
 import { db } from "../../../FirebaseConfig/config";
+import BookingModal from './BookingModal/BookingModal';
 
 const PropertyDetails = () => {
   const location = useLocation();
@@ -248,6 +249,7 @@ const PropertyDetails = () => {
   const selectedProperty = location.state?.selectedProperty;
 
   const [user, setUser] = useState({});
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("loggedinRental"))
@@ -471,14 +473,21 @@ const PropertyDetails = () => {
               </button>
 
               <button
-                onClick={() => {
+                onClick={() => 
                   // Booking logic placeholder
-                  console.log("Book Now clicked for:", selectedProperty.title);
-                }}
+                  setShowModal(true)
+                }
                 className="bg-green-400 hover:bg-green-500 text-black font-semibold py-2 px-4 rounded-lg w-full"
               >
                 ✅ Book Now
               </button>
+              {showModal && (
+                <BookingModal
+                  user  = {user}
+                  property = {selectedProperty}
+                  onClose = {() => setShowModal(false)}
+                />
+              )}
             </div>
           </div>
         </div>

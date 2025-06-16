@@ -14,6 +14,8 @@ import PropertyDetails from './DashBoards/RentalDashBoards/PropertyDetails/Prope
 import AboutUs from './Components/About/AboutComponent';
 import MyWishlist from './Components/Navbar/MyWishlist/MyWishlist';
 import ContactUs from './Components/ContactUs/ContactUs';
+import Bookings from './DashBoards/OwnerDashBoards/Bookings/Bookings';
+import MyBookings from './DashBoards/RentalDashBoards/MyBookings/MyBookings';
 // import AboutPage from './Components/About/AboutPage/AboutPage';
 // import About from './Components/About/AboutComponent';
 
@@ -32,12 +34,14 @@ const App = () => {
         <Route path='/ownerDashBoard' element={<OwnerDashBoards />} >
           <Route path='AddProperty' element={<AddProperty />} />
           <Route path='MyProperty' element={<MyProperty />} />
+          <Route path='Bookings' element={<Bookings />} />
         </Route>
         <Route path='/RentalDashBoard' element={<RentalDashBoards />}>
           {/* <Route path='propertydetails' element={<PropertyDetails />} /> */}
         </Route>
         <Route path='/propertydetails' element={<PropertyDetails />} />
         <Route path= "/mywishlist" element={<MyWishlist />} />
+        <Route path='/MyBookings' element={<MyBookings />} />
       </Routes>
     </div>
   )

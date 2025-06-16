@@ -131,6 +131,7 @@ const RentalDashBoards = () => {
         const ownersPropertiesRef = collection(db, 'Owners');
         const allOwnerProperties = await getDocs(ownersPropertiesRef);
         let propertiesFromDoc = [];
+        let bookingsFromDoc = [];
 
         allOwnerProperties.docs.forEach((singleOwnerDoc) => {
           const ownerData = singleOwnerDoc.data();

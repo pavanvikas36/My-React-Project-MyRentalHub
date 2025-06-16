@@ -266,8 +266,9 @@ const PropertiesDisplay = ({ allProperties }) => {
 
   const handlePropertyClick = (property) => {
     const user = localStorage.getItem("loggedinRental");
+    const guestUser = localStorage.getItem("guestUser");
 
-    if (user) {
+    if (user || guestUser) {
       setSelectedProperty(property);
       navigate("/propertydetails", { state: { selectedProperty: property } });
     } else {
