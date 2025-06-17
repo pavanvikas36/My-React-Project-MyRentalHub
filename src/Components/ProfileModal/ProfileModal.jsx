@@ -286,7 +286,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { XMarkIcon, UserCircleIcon } from '@heroicons/react/24/outline';
-import { doc, updateDoc } from 'firebase/firestore';
+import { doc, updateDoc, getDoc } from 'firebase/firestore';
 import { db } from '../../FirebaseConfig/config';
 
 const ProfileModal = ({ user, isOpen, onClose }) => {
@@ -294,10 +294,30 @@ const ProfileModal = ({ user, isOpen, onClose }) => {
   const [imageUrl, setImageUrl] = useState('');
 
   // 🔄 Update imageUrl if user.profileImage changes
+  // useEffect(() => {
+  //   if (user?.profileImage) {
+  //     setImageUrl(user.profileImage);
+  //   }
+  // }, [user]);
   useEffect(() => {
-    if (user?.profileImage) {
-      setImageUrl(user.profileImage);
-    }
+    const fetchProfileImage = async () => {
+      if (!user?.displayName) return;
+
+      try {
+        const userRef = doc(db, 'Rentals', user.displayName);
+        const userSnap = await getDoc(userRef);
+        if (userSnap.exists()) {
+          const data = userSnap.data();
+          if (data.profileImage) {
+            setImageUrl(data.profileImage);
+          }
+        }
+      } catch (error) {
+        console.error('Failed to fetch profile image:', error);
+      }
+    };
+
+    fetchProfileImage();
   }, [user]);
 
   if (!isOpen) return null;
@@ -340,7 +360,7 @@ const ProfileModal = ({ user, isOpen, onClose }) => {
       setUploading(false);
     }
   };
-
+  // console.log(imageUrl)
   return (
     <div className="fixed inset-0 z-50 flex justify-center items-start bg-black bg-opacity-40">
       <div className="bg-white rounded-2xl shadow-xl w-[90%] max-w-md p-6 relative animate-fadeIn mt-16">
