@@ -360,7 +360,7 @@ const ProfileModal = ({ user, isOpen, onClose }) => {
       setUploading(false);
     }
   };
-  // console.log(imageUrl)
+  console.log(imageUrl)
   return (
     <div className="fixed inset-0 z-50 flex justify-center items-start bg-black bg-opacity-40">
       <div className="bg-white rounded-2xl shadow-xl w-[90%] max-w-md p-6 relative animate-fadeIn mt-16">

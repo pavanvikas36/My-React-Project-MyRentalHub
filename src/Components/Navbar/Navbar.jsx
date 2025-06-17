@@ -191,10 +191,13 @@ import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 import { BiHomeHeart } from "react-icons/bi";
 import ProfileModal from "../ProfileModal/ProfileModal";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../../FirebaseConfig/config";
 
 const Navbar = () => {
   const [user, setUser] = useState({});
   const [showModal, setShowModal] = useState(false);
+  const [imageUrl, setImageUrl] = useState(null);
 
   const navigate = useNavigate();
   const guestUser = JSON.parse(localStorage.getItem("guestUser"));
@@ -205,6 +208,27 @@ const Navbar = () => {
     const loggedUser = JSON.parse(localStorage.getItem("loggedinRental"));
     setUser(loggedUser?.user || {});
   }, []);
+
+  useEffect(() => {
+    const fetchProfileImage = async () => {
+      if (!user?.displayName) return;
+
+      try {
+        const userRef = doc(db, 'Rentals', user.displayName); // displayName as document ID
+        const userSnap = await getDoc(userRef);
+        if (userSnap.exists()) {
+          const data = userSnap.data();
+          if (data.profileImage) {
+            setImageUrl(data.profileImage); // ✅ sets image URL in state
+          }
+        }
+      } catch (error) {
+        console.error('Failed to fetch profile image:', error);
+      }
+    };
+
+    fetchProfileImage();
+  }, [user]);
 
   const handleLogout = async () => {
     const auth = getAuth();
@@ -249,7 +273,7 @@ const Navbar = () => {
       }
     }
   };
-
+  console.log(imageUrl)
   return (
     <div className="navbar sticky top-0 z-50 px-4 md:px-8 shadow-md flex justify-between items-center bg-violet-800">
       {/* Navbar Start */}
@@ -309,7 +333,7 @@ const Navbar = () => {
             <div role="button" tabIndex={0} aria-label="User profile menu" className="btn btn-ghost btn-circle avatar">
               <div className="w-10 rounded-full ring ring-white ring-offset-base-100">
                 <img
-                  src={user?.profileImage || "https://i.pravatar.cc/150?u=user"}
+                  src={imageUrl || "https://i.pravatar.cc/150?u=user"}
                   alt="User"
                   className="object-cover"
                 />
