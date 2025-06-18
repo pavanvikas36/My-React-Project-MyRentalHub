@@ -380,7 +380,7 @@ const PropertyDetails = () => {
     rent,
     bedrooms,
     bathrooms,
-    furnished,
+    furnishing,
     amenities,
     images,
     owner,
@@ -433,7 +433,7 @@ const PropertyDetails = () => {
               <p><strong>₹{rent}/mo</strong></p>
               <p>🛏️ {bedrooms} Beds</p>
               <p>🛁 {bathrooms} Baths</p>
-              <p>{furnished ? '🪑 Furnished' : 'Unfurnished'}</p>
+              <p>{furnishing ? '🪑 Furnished' : 'Unfurnished'}</p>
             </div>
 
             <h3 className="font-bold text-black">Description</h3>
