@@ -1,4 +1,5 @@
 import React from "react";
+import logo from "../../../assets/MyRentalHubLogoDesign3.png"
 import { Facebook, Instagram, Mail, MapPin, Phone, Twitter } from "lucide-react";
 
 const Footer = () => {
@@ -6,11 +7,24 @@ const Footer = () => {
     <footer className="bg-violet-900 text-violet-100 px-6 md:px-20 py-12">
       <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10">
         {/* Brand Info */}
-        <div>
+        {/* <div>
           <h2 className="text-2xl font-bold text-white mb-4">MyRentalHub</h2>
           <p className="text-sm text-violet-200">
             Your trusted platform for finding and renting homes securely, easily, and quickly.
           </p>
+        </div> */}
+        <div className="flex items-center space-x-4">
+          <img
+            src={logo} // Replace with your actual logo path or URL
+            alt="MyRentalHub Logo"
+            className="w-15 h-12 rounded-full" // Adjust size and shape as needed
+          />
+          <div>
+            <h2 className="text-2xl font-bold text-white mb-1">MyRentalHub</h2>
+            <p className="text-sm text-violet-200">
+              Your trusted platform for finding and renting homes securely, easily, and quickly.
+            </p>
+          </div>
         </div>
 
         {/* Quick Links */}
@@ -47,7 +61,7 @@ const Footer = () => {
 
       {/* Bottom copyright */}
       <div className="mt-12 border-t border-violet-800 pt-6 text-center text-sm text-violet-300">
-        &copy; {new Date().getFullYear()} MyRentalHub. All rights reserved.
+        &copy; {new Date().getFullYear()} MyRentalHub. All rights reserved. Build By Pavan Vikas Nayak
       </div>
     </footer>
   );
