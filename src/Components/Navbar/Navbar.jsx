@@ -266,7 +266,7 @@ const Navbar = () => {
         });
 
         setTimeout(() => {
-          navigate("/login");
+          navigate("/");
         }, 1000);
       } catch (error) {
         console.log(error);
