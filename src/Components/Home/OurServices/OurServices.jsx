@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Home, ShieldCheck, MapPin, Star, Users } from "lucide-react";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 const services = [
   {
@@ -27,6 +29,10 @@ const OurServices = () => {
   const randomFollowers = Math.floor(Math.random() * 7000) + 5000; // 5000–11999
 
   useEffect(() => {
+    AOS.init({ duration: 1000, once: true });
+  }, []);
+
+  useEffect(() => {
     let reviewCount = 1;
     let followerCount = 1;
 
@@ -51,26 +57,49 @@ const OurServices = () => {
   return (
     <div className="bg-gray-50 py-16 px-4 sm:px-6 lg:px-12">
       <div className="max-w-7xl mx-auto text-center">
-        <h2 className="text-3xl sm:text-4xl font-bold text-black-800 mb-4">
+        <h2
+          className="text-3xl sm:text-4xl font-bold text-black-800 mb-4"
+          data-aos="fade-up"
+        >
           What We Offer
         </h2>
-        <p className="text-gray-600 max-w-2xl mx-auto mb-12 text-base sm:text-lg">
-          At <strong>MyRentalHub</strong>, we provide smart, safe, and easy-to-use solutions for your rental journey.
+        <p
+          className="text-gray-600 max-w-2xl mx-auto mb-12 text-base sm:text-lg"
+          data-aos="fade-up"
+          data-aos-delay="100"
+        >
+          At <strong>MyRentalHub</strong>, we provide smart, safe, and easy-to-use
+          solutions for your rental journey.
         </p>
 
         {/* Services Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+        <div
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-16"
+          data-aos="fade-up"
+          data-aos-delay="200"
+        >
           {services.map((service, index) => (
-            <div key={index} className="bg-white rounded-2xl p-6 shadow hover:shadow-lg transition text-left">
+            <div
+              key={index}
+              className="bg-white rounded-2xl p-6 shadow hover:shadow-lg transition text-left"
+              data-aos="zoom-in"
+              data-aos-delay={index * 100}
+            >
               <div className="mb-4">{service.icon}</div>
-              <h3 className="text-xl font-semibold text-black-700 mb-2">{service.title}</h3>
+              <h3 className="text-xl font-semibold text-black-700 mb-2">
+                {service.title}
+              </h3>
               <p className="text-gray-600 text-sm">{service.description}</p>
             </div>
           ))}
         </div>
 
         {/* Animated Stats */}
-        <div className="flex flex-col sm:flex-row justify-center items-center gap-8 text-black-800 text-xl font-semibold">
+        <div
+          className="flex flex-col sm:flex-row justify-center items-center gap-8 text-black-800 text-xl font-semibold"
+          data-aos="fade-up"
+          data-aos-delay="300"
+        >
           <div className="flex items-center gap-2">
             <Star className="w-6 h-6" /> {reviews.toLocaleString()}+ Reviews
           </div>

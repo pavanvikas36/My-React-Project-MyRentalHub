@@ -16,6 +16,7 @@
     "axios": "^1.9.0",
     "daisyui": "^4.12.24",
     "firebase": "^11.8.1",
+    "framer-motion": "^12.18.1",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.513.0",
     "react": "^19.1.0",
